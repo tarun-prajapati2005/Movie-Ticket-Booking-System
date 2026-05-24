@@ -8,7 +8,7 @@ const MovieCard = ({ movie }) => {
 
     return (
         <div className='flex flex-col justify-between p-3 bg-gray-800 rounded-2xl hover:-translate-y-1 transition duration-300 w-66'>
-            <img onClick={() => { navigate(`/movie/${movie._id}`); scrollTo(0, 0) }}
+            <img onClick={() => { navigate(`/movies/${movie._id}`); scrollTo(0, 0) }}
                 src={movie.backdrop_path} alt="" className='rounded-lg h-52 w-full object-cover object-bottom-right cursor-pointer' />
             <p className='font-semibold mt-2 truncate'>{movie.title}</p>
 
@@ -16,7 +16,7 @@ const MovieCard = ({ movie }) => {
                 {new Date(movie.release_date).getFullYear()} ◉ {movie.genres.slice(0, 2).map(genre => genre.name).join(" | ")} ◉ {timeFormat(movie.runtime)}
             </p>
             <div className='flex items-center justify-between mt-4 pb-3'>
-                <button onClick={() => { navigate(`/movie/${movie._id}`); scrollTo(0, 0) }} className='flex items-center gap-2 px-8 py-3.5 text-sm bg-linear-to-r from-pink-500 to-pink-400 hover:from-pink-600 hover:to-pink-500 transition-all duration-300 rounded-full font-semibold cursor-pointer shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 hover:scale-105'>Buy Tickets</button>
+                <button onClick={() => { navigate(`/movies/${movie._id}`); scrollTo(0, 0) }} className='flex items-center gap-2 px-8 py-3.5 text-sm bg-linear-to-r from-pink-500 to-pink-400 hover:from-pink-600 hover:to-pink-500 transition-all duration-300 rounded-full font-semibold cursor-pointer shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 hover:scale-105'>Buy Tickets</button>
                 <p className='flex items-center gap-1 text-gray-400 mt-1 pr-1' >
                     <StarIcon className="w-4 h-4 text-primary fill-primary" />
                     {movie.vote_average.toFixed(1)}
