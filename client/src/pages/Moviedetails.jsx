@@ -2,18 +2,29 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { dummyDateTimeData, dummyShowsData } from "../assets/assets";
 import BlurCircle from "../components/BlurCircle";
+import Dateselect from "../components/Dateselect";
 import { StarIcon } from "lucide-react";
 import timeFormat from "../lib/timeFormat";
 import { PlayCircleIcon } from "lucide-react";
 import { Heart } from "lucide-react";
+import MovieCard from "../components/MovieCard";
+import { useNavigate } from "react-router-dom";
 
 const Moviedetails = () => {
+  const navigate = useNavigate()
   const { id } = useParams()
   const [show, setShow] = useState(null)
+  const [showDateSelect, setShowDateSelect] = useState(false)
 
   useEffect(() => {
     const getShow = async () => {
       const show = dummyShowsData.find(show => show._id === id)
+      if (show) {
+        setShow({
+          movie: show,
+          dateTime: dummyDateTimeData
+        })
+      }
       setShow({
         movie: show,
         dateTime: dummyDateTimeData
@@ -21,6 +32,12 @@ const Moviedetails = () => {
     }
     getShow()
   }, [id])
+
+  useEffect(() => {
+    if (!showDateSelect) return
+
+    document.getElementById(id || "dateSelect")?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }, [showDateSelect, id])
 
   return show ? (
     <div className="px-16 md:px-16 lg:px-40 pt-30 md:pt-50">
@@ -46,7 +63,19 @@ const Moviedetails = () => {
               <PlayCircleIcon className="w-5 h-5" />
               Watch Trailer
             </button>
-            <a href="#dateSelect" className="flex items-center gap-2 px-7 py-3 text-sm bg-linear-to-r from-pink-500 to-pink-400 hover:from-pink-600 hover:to-pink-500 transition-all duration-300 rounded-md font-semibold cursor-pointer shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 hover:scale-105">Buy Tickets</a>
+            <button
+              onClick={() => {
+                if (showDateSelect) {
+                  document.getElementById(id || "dateSelect")?.scrollIntoView({ behavior: "smooth", block: "start" })
+                  return
+                }
+
+                setShowDateSelect(true)
+              }}
+              className="flex items-center gap-2 px-7 py-3 text-sm bg-linear-to-r from-pink-500 to-pink-400 hover:from-pink-600 hover:to-pink-500 transition-all duration-300 rounded-md font-semibold cursor-pointer shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 hover:scale-105"
+            >
+              Buy Tickets
+            </button>
             <button className="bg-gray-700 p-2.5 rounded-full transition cursor-pointer active:scale-95">
               <Heart className={`w-5 h-5`} />
             </button>
@@ -63,12 +92,22 @@ const Moviedetails = () => {
           {show.movie.casts.slice(0, 12).map((cast, index) => (
             <div key={index} className="flex flex-col items-center text-center">
               <img src={cast.profile_path} alt="" className="rounded-full h-20 md:h-20 aspect-square object-cover" />
-              <p>{cast.name}</p>
+              <p className="font-medium text-xs mt-3">{cast.name}</p>
             </div>
           ))}
         </div>
       </div>
+      {showDateSelect && <Dateselect dateTime={show.dateTime} id={id} />}
+      <p className="text-lg font-medium mt-20 mb-8"> You May Also Like This</p>
 
+      <div className="flex flex-wrap  max-lg:justify-center gap-8">
+        {dummyShowsData.slice(0, 4).map((movie, index) => (
+          <MovieCard key={index} movie={movie} />
+        ))}
+      </div>
+      <div className="flex justify-center mt-20 ">
+        <button onClick={() => { navigate("/movies"); scrollTo(0, 0) }} className="flex items-center gap-2 px-8 py-3.5 text-sm bg-linear-to-r from-pink-500 to-pink-400 hover:from-pink-600 hover:to-pink-500 transition-all duration-300 rounded-full font-semibold cursor-pointer shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 hover:scale-105">Show More</button>
+      </div>
 
     </div>
   ) : (
